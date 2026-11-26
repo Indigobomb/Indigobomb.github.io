@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Photoscan Project</title>
+  <!-- Cargar la biblioteca Google's Model Viewer -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+  <style>
+    body { font-family: sans-serif; margin: 0; background: #111; color: white; }
+    model-viewer { width: 100%; height: 80vh; background-color: #222; }
+    .hotspot {
+      background: #ff4757; border-radius: 50%; border: 2px solid white;
+      width: 20px; height: 20px; cursor: pointer;
+    }
+    #info-panel { padding: 40px; min-height: 50vh; background: #1e1e1e; }
+  </style>
+</head>
+<body>
+
+  <!-- 3D Viewer: Maneja mouse y toque automáticamente -->
+  <model-viewer id="viewer" src="1TMHistModelPH.glb" camera-controls touch-action="pan-y" alt="3D Photoscan">
+    
+    <!-- Clickable Hotspot on the 3D model -->
+    <button class="hotspot" slot="hotspot-1" 
+            data-position="0.1m 0.5m 0.2m" 
+            data-normal="0m 1m 0m"
+            data-title="Part 1: The Top Section"
+            data-text="Here is the detailed historical or scientific info about this specific part..."
+            data-audio="part1-audio.mp3">
+    </button>
+
+  </model-viewer>
+
+  <!-- Seccion Info y Audio -->
+  <div id="info-panel">
+    <h2 id="info-title">Click a point on the 3D model to learn more</h2>
+    <p id="info-text"></p>
+    <audio id="audio-player" controls></audio>
+  </div>
+
+  <script>
+    const hotspots = document.querySelectorAll('.hotspot');
+    const infoPanel = document.getElementById('info-panel');
+    const infoTitle = document.getElementById('info-title');
+    const infoText = document.getElementById('info-text');
+    const audioPlayer = document.getElementById('audio-player');
+
+    hotspots.forEach(spot => {
+      spot.addEventListener('click', () => {
+        // 1. Update text
+        infoTitle.textContent = spot.dataset.title;
+        infoText.textContent = spot.dataset.text;
+
+        // 2. Load and play audio
+        audioPlayer.src = spot.dataset.audio;
+        audioPlayer.play();
+
+        // 3. Smoothly scroll down to the info panel
+        infoPanel.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+
+</body>
+</html>
